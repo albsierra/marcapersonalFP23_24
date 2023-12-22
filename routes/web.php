@@ -88,7 +88,14 @@ Route::prefix('users')->group(function () {
 
     Route::get('/create', [UserController::class, 'getCreate'])->middleware('auth');
 
-    Route::put('/edit/{id}', [UserController::class, 'putEdit'])->where('id', '[0-9]+');
+    Route::put('/edit/{id}', [UserController::class, 'putEdit'])->name('user.putEdit')->where('id', '[0-9]+');
+
+    Route::post('/avatar/{id}', [UserController::class, 'postAvatar'])->name('user.postAvatar')
+    ->where('id', '[0-9]+')
+    ->middleware('auth');
+
+    Route::get('/avatar/{id}', [UserController::class, 'getAvatar'])->name('user.getAvatar')
+    ->where('id', '[0-9]+');
 
     Route::get('/edit/{id}', [UserController::class, 'getEdit'])->where('id', '[0-9]+')->middleware('auth');
 });

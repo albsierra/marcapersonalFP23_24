@@ -22,16 +22,31 @@ class UserController extends Controller
 
     public function putEdit(Request $request, $id)
     {
+        $user = User::findOrFail($id);
+        $user->update($request->all());
+
+        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+    }
+
+    public function postAvatar(Request $request, $id)
+    {
         // TODO: Eliminar el avatar anterior si existiera
         if ($request->file('avatar')) {
             $user = User::findOrFail($id);
             $path = $request->file('avatar')->store('avatars', ['disk' => 'public']);
             $user->avatar = $path;
             $user->save();
-            $user->update($request->all());
         }
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        return Redirect::route('profile.edit')->with('status', 'avatar-updated');
+    }
+
+    public function getAvatar($id)
+    {
+        $user = User::findOrFail($id);
+        $url = asset('storage/' . $user->avatar);
+
+        return response()->json(['avatarUrl' => $url]);
     }
 
     public function getEdit($id)
