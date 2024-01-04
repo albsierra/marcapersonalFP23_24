@@ -97,6 +97,9 @@ Route::prefix('users')->group(function () {
     Route::get('/avatar/{id}', [UserController::class, 'getAvatar'])->name('user.getAvatar')
     ->where('id', '[0-9]+');
 
+    Route::get('/actividades/{id}', [UserController::class, 'getActividades'])->name('user.getActividades')
+    ->where('id', '[0-9]+');
+
     Route::get('/edit/{id}', [UserController::class, 'getEdit'])->where('id', '[0-9]+')->middleware('auth');
 });
 

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Actividad;
+use App\Models\Reconocimiento;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -47,6 +49,15 @@ class UserController extends Controller
         $url = asset('storage/' . $user->avatar);
 
         return response()->json(['avatarUrl' => $url]);
+    }
+
+    public function getActividades($id)
+    {
+        $user = User::findOrFail($id);
+        $actividades_id = Reconocimiento::where('estudiante_id', $user->id)->pluck('actividad_id');
+        $actividades = Actividad::whereIn('id', $actividades_id)->get();
+
+        return response()->json(['actividades' => $actividades]);
     }
 
     public function getEdit($id)
