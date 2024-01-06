@@ -94,7 +94,14 @@ Route::prefix('users')->group(function () {
     ->where('id', '[0-9]+')
     ->middleware('auth');
 
+    Route::post('/curriculo/{id}', [UserController::class, 'postCurriculo'])->name('user.postCurriculo')
+    ->where('id', '[0-9]+')
+    ->middleware('auth');
+
     Route::get('/avatar/{id}', [UserController::class, 'getAvatar'])->name('user.getAvatar')
+    ->where('id', '[0-9]+');
+
+    Route::get('/curriculo/{id}', [UserController::class, 'getCurriculo'])->name('user.getCurriculo')
     ->where('id', '[0-9]+');
 
     Route::get('/actividades/{id}', [UserController::class, 'getActividades'])->name('user.getActividades')

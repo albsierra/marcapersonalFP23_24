@@ -4,117 +4,80 @@ import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import { Link, useForm, usePage } from '@inertiajs/react';
 import { Transition } from '@headlessui/react';
+import React, { useEffect, useState } from 'react';
 
-export default function UpdateProfileInformation({ mustVerifyEmail, status, className = '' }) {
+export default function UpdateCurriculumForm({ className = '' }) {
     const user = usePage().props.auth.user;
 
-    const { data, setData, patch, errors, processing, recentlySuccessful } = useForm({
-        name: user.name,
-        email: user.email,
+    const { data, setData, post, errors, processing, recentlySuccessful } = useForm({
+        pdf_curriculum: '',
+        video_curriculum: '',
     });
+
+    const [curriculoData, setCurriculoData] = useState('');
+
+    useEffect(() => {
+        axios.get(route('user.getCurriculo', { id: user.id }))
+            .then(response => {
+                setCurriculoData(response.data);
+            });
+    }, [user.id]);
 
     const submit = (e) => {
         e.preventDefault();
 
-        patch(route('profile.update'));
+        post(route('user.postCurriculo', { id: user.id }));
     };
 
     return (
         <section className={className}>
             <header>
-                <h2 className="text-lg font-medium text-gray-900">Profile Information</h2>
+                <h2 className="text-lg font-medium text-gray-900">Currículo</h2>
 
                 <p className="mt-1 text-sm text-gray-600">
-                    Update your account's profile information and email address.
+                    Actualiza la información de tu Currículo
                 </p>
+                <div>
+                    <p className="text-sm mt-2 text-gray-800">
+                        <a
+                            href={(curriculoData && curriculoData.curriculoUrl)
+                                    ?? curriculoData.curriculoUrl}
+                            download={(curriculoData && curriculoData.curriculoUrl)
+                                    ?? curriculoData.curriculoUrl}
+                        >
+                            Click here to download your curriculum.
+                        </a>
+                    </p>
+                </div>
             </header>
-
             <form onSubmit={submit} className="mt-6 space-y-6">
                 <div>
-                    <InputLabel htmlFor="name" value="Name" />
+                    <InputLabel htmlFor="avatar" value="Avatar" />
 
                     <TextInput
-                        id="name"
+                        id="pdf_curriculum"
+                        type="file"
                         className="mt-1 block w-full"
-                        value={data.name}
-                        onChange={(e) => setData('name', e.target.value)}
+                        onChange={(e) => setData('pdf_curriculum', e.target.files[0])}
+                    />
+
+                    <InputError className="mt-2" message={errors.pdf_curriculum} />
+                </div>
+                <div>
+                    <InputLabel htmlFor="video_curriculum" value="Video Currículo" />
+
+                    <TextInput
+                        id="video_curriculum"
+                        className="mt-1 block w-full"
+                        value={data.video_curriculum}
+                        onChange={(e) => setData('video_curriculum', e.target.value)}
                         required
                         isFocused
-                        autoComplete="name"
+                        autoComplete="video_curriculum"
                     />
 
-                    <InputError className="mt-2" message={errors.name} />
+                    <InputError className="mt-2" message={errors.video_curriculum} />
                 </div>
-
-                <div>
-                    <InputLabel htmlFor="nombre" value="Nombre" />
-
-                    <TextInput
-                        id="nombre"
-                        className="mt-1 block w-full"
-                        value={data.nombre}
-                        onChange={(e) => setData('nombre', e.target.value)}
-                        required
-                        isFocused
-                        autoComplete="nombre"
-                    />
-
-                    <InputError className="mt-2" message={errors.nombre} />
-                </div>
-
-                <div>
-                    <InputLabel htmlFor="apellidos" value="Apellidos" />
-
-                    <TextInput
-                        id="name"
-                        className="mt-1 block w-full"
-                        value={data.apellidos}
-                        onChange={(e) => setData('name', e.target.value)}
-                        required
-                        isFocused
-                        autoComplete="apellidos"
-                    />
-
-                    <InputError className="mt-2" message={errors.apellidos} />
-                </div>
-
-                <div>
-                    <InputLabel htmlFor="email" value="Email" />
-
-                    <TextInput
-                        id="email"
-                        type="email"
-                        className="mt-1 block w-full"
-                        value={data.email}
-                        onChange={(e) => setData('email', e.target.value)}
-                        required
-                        autoComplete="username"
-                    />
-
-                    <InputError className="mt-2" message={errors.email} />
-                </div>
-
-                {mustVerifyEmail && user.email_verified_at === null && (
-                    <div>
-                        <p className="text-sm mt-2 text-gray-800">
-                            Your email address is unverified.
-                            <Link
-                                href={route('verification.send')}
-                                method="post"
-                                as="button"
-                                className="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                            >
-                                Click here to re-send the verification email.
-                            </Link>
-                        </p>
-
-                        {status === 'verification-link-sent' && (
-                            <div className="mt-2 font-medium text-sm text-green-600">
-                                A new verification link has been sent to your email address.
-                            </div>
-                        )}
-                    </div>
-                )}
 
                 <div className="flex items-center gap-4">
                     <PrimaryButton disabled={processing}>Save</PrimaryButton>

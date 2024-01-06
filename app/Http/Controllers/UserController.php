@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Actividad;
+use App\Models\Curriculo;
 use App\Models\Reconocimiento;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -49,6 +50,36 @@ class UserController extends Controller
         $url = asset('storage/' . $user->avatar);
 
         return response()->json(['avatarUrl' => $url]);
+    }
+
+    public function getCurriculo($id)
+    {
+        $curriculo = Curriculo::where('user_id', $id)->firstOrFail();
+        $curriculoUrl = $curriculo->pdf_curriculum != null
+            ? asset('storage/' . $curriculo->pdf_curriculum)
+            : null;
+
+        return response()->json([
+            'curriculoUrl' => $curriculoUrl,
+            'curriculo' => $curriculo
+        ]);
+    }
+
+    public function postCurriculo(Request $request, $id)
+    {
+        // TODO: Eliminar el currículo anterior si existiera
+        $curriculo = Curriculo::where('user_id', $id)->firstOrFail();
+        if ($request->hasFile('pdf_curriculum') && $request->pdf_curriculum->getClientOriginalExtension() === 'pdf') {
+            $path = $request->file('pdf_curriculum')->store('curriculos', ['disk' => 'public']);
+            $curriculo->pdf_curriculum = $path;
+        }
+        if ($request->has('video_curriculum')) {
+            $curriculo->video_curriculum = $request->video_curriculum;
+        }
+
+        $curriculo->save();
+
+        return Redirect::route('profile.edit')->with('status', 'curriculum-updated');
     }
 
     public function getActividades($id)
