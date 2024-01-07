@@ -90,26 +90,29 @@ Route::prefix('users')->group(function () {
 
     Route::put('/edit/{id}', [UserController::class, 'putEdit'])->name('user.putEdit')->where('id', '[0-9]+');
 
-    Route::post('/avatar/{id}', [UserController::class, 'postAvatar'])->name('user.postAvatar')
-    ->where('id', '[0-9]+')
-    ->middleware('auth');
-
-    Route::post('/curriculo/{id}', [UserController::class, 'postCurriculo'])->name('user.postCurriculo')
-    ->where('id', '[0-9]+')
-    ->middleware('auth');
-
-    Route::get('/avatar/{id}', [UserController::class, 'getAvatar'])->name('user.getAvatar')
-    ->where('id', '[0-9]+');
-
-    Route::get('/curriculo/{id}', [UserController::class, 'getCurriculo'])->name('user.getCurriculo')
-    ->where('id', '[0-9]+');
-
-    Route::get('/actividades/{id}', [UserController::class, 'getActividades'])->name('user.getActividades')
-    ->where('id', '[0-9]+');
-
     Route::get('/edit/{id}', [UserController::class, 'getEdit'])->where('id', '[0-9]+')->middleware('auth');
 });
 
+Route::prefix('profile')->group(function () {
+
+    Route::post('/avatar/{id}', [ProfileController::class, 'postAvatar'])->name('profile.postAvatar')
+    ->where('id', '[0-9]+')
+    ->middleware('auth');
+
+    Route::post('/curriculo/{id}', [ProfileController::class, 'postCurriculo'])->name('profile.postCurriculo')
+    ->where('id', '[0-9]+')
+    ->middleware('auth');
+
+    Route::get('/avatar/{id}', [ProfileController::class, 'getAvatar'])->name('profile.getAvatar')
+    ->where('id', '[0-9]+');
+
+    Route::get('/curriculo/{id}', [ProfileController::class, 'getCurriculo'])->name('profile.getCurriculo')
+    ->where('id', '[0-9]+');
+
+    Route::get('/actividades/{id}', [ProfileController::class, 'getActividades'])->name('profile.getActividades')
+    ->where('id', '[0-9]+');
+
+});
 Route::prefix('actividades')->group(function () {
 
     Route::get('/', [ActividadController::class, 'getIndex'])->name('actividades');

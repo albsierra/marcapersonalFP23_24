@@ -17,7 +17,7 @@ export default function UpdateAvatarForm({ className = '' }) {
     const [avatarUrl, setAvatarUrl] = useState('');
 
     useEffect(() => {
-        axios.get(route('user.getAvatar', { id: user.id }))
+        axios.get(route('profile.getAvatar', { id: user.id }))
             .then(response => {
                 setAvatarUrl(response.data.avatarUrl);
             });
@@ -25,7 +25,7 @@ export default function UpdateAvatarForm({ className = '' }) {
 
     const submit = (e) => {
         e.preventDefault();
-        post(route('user.postAvatar', { id: user.id }));
+        post(route('profile.postAvatar', { id: user.id }));
     };
 
     return (

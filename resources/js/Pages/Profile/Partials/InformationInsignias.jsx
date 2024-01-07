@@ -8,7 +8,7 @@ export default function InformationInsignias({ className = '' }) {
     const [actividades, setActividades] = useState([]);
 
     useEffect(() => {
-        axios.get(route('user.getActividades', { id: user.id }))
+        axios.get(route('profile.getActividades', { id: user.id }))
             .then(response => {
                 setActividades(response.data.actividades);
             });

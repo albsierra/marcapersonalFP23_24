@@ -17,7 +17,7 @@ export default function UpdateCurriculumForm({ className = '' }) {
     const [curriculoData, setCurriculoData] = useState('');
 
     useEffect(() => {
-        axios.get(route('user.getCurriculo', { id: user.id }))
+        axios.get(route('profile.getCurriculo', { id: user.id }))
             .then(response => {
                 setCurriculoData(response.data);
             });
@@ -26,7 +26,7 @@ export default function UpdateCurriculumForm({ className = '' }) {
     const submit = (e) => {
         e.preventDefault();
 
-        post(route('user.postCurriculo', { id: user.id }));
+        post(route('profile.postCurriculo', { id: user.id }));
     };
 
     return (
