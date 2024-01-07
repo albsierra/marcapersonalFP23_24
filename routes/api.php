@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\TokenController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Psr\Http\Message\ServerRequestInterface;
@@ -18,8 +19,15 @@ use Tqdev\PhpCrudApi\Config\Config;
 */
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+    $user = $request->user();
+    $user->fullName = $user->nombre . ' ' . $user->apellidos;
+    return $user;
 });
+
+// emite un nuevo token
+Route::post('tokens', [TokenController::class, 'store']);
+// elimina el token del usuario autenticado
+Route::delete('tokens', [TokenController::class, 'destroy'])->middleware('auth:sanctum');
 
 Route::any('/{any}', function (ServerRequestInterface $request) {
     $config = new Config([
