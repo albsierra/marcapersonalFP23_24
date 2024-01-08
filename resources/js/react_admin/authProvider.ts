@@ -63,7 +63,7 @@ export const authProvider = {
   getIdentity: () => {
     const token = localStorage.getItem('auth') ? JSON.parse(localStorage.getItem('auth')) : undefined
     const API_URL = `${process.env.REACT_APP_BACKEND_URL}/api`
-    const request = new Request(`${API_URL}/user`, {
+    const request = new Request(`/api/user`, {
       method: 'GET',
       headers: new Headers({
         'Content-Type': 'application/json',
