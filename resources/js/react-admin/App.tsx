@@ -7,6 +7,7 @@ export const App = () => (
     <Admin
         dataProvider={dataProvider}
 		authProvider={authProvider}
+        basename="/dashboard"
 	>
         <Resource name="users" list={ListGuesser} edit={EditGuesser} show={ShowGuesser} />
         <Resource name="curriculos" list={ListGuesser} edit={EditGuesser} show={ShowGuesser} />
@@ -17,4 +18,3 @@ export const App = () => (
         <Resource name="reconocimientos" list={ListGuesser} edit={EditGuesser} show={ShowGuesser} />
     </Admin>
 );
-
