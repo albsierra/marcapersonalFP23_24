@@ -25,9 +25,6 @@ use App\Http\Controllers\API\CurriculoController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
 
 Route::prefix('v1')->group(function () {
     Route::apiResource('ciclos', CicloController::class);
@@ -41,7 +38,12 @@ Route::prefix('v1')->group(function () {
     Route::apiResource('actividades', ActividadController::class)->parameters([
         'actividades' => 'actividad'
     ]);
-});
+    Route::get('/user', function (Request $request) {
+        $user = $request->user();
+        $user->fullName = $user->nombre . ' ' . $user->apellidos;
+        return $user;
+    });
+})->middleware('auth:sanctum');
 
 
 Route::any('/{any}', function (ServerRequestInterface $request) {
