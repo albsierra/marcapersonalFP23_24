@@ -41,6 +41,7 @@ Route::prefix('v1')->group(function () {
 
     Route::apiResource('ciclos', CicloController::class);
     Route::apiResource('reconocimientos', ReconocimientoController::class);
+    Route::put('reconocimientos/validar/{id}', [ReconocimientoController::class, 'validar'])->where('id', '[0-9]+');
     Route::apiResource('users', UserController::class);
     Route::apiResource('proyectos', ProyectoController::class);
     Route::apiResource('empresas', EmpresaController::class);
